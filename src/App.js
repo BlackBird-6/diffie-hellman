@@ -75,14 +75,13 @@ function App() {
 
     const A = Number(powmod(g, a, p));
     const B = Number(powmod(g, b, p));
-    const sAlice = Number(powmod(B, a, p));
-    const sBob = Number(powmod(A, b, p));
+    const s = Number(powmod(B, a, p));
 
     const pBitsLen = p.toString(2).length - 1;
     const baseStatus = `p=${p}${safePrimeOnly ? ' (safe prime)' : ''}, q=${q}, g=${g} (order q)\n` +
       `Bob: a=${a} (private), A=${A} (public)\n` +
       `Alice: b=${b} (private), B=${B} (public)\n` +
-      `Shared Secret: s=${sAlice}\n`;
+      `Shared Secret: s=${s}\n`;
 
     setStatusText(baseStatus + `\nAttacker captured A and is brute-forcing a...`);
 
