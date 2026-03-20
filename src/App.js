@@ -129,7 +129,7 @@ function App() {
   };
 
   return (
-    <div style={{ maxWidth: '920px', margin: '0 auto', background: '#121212', color: '#e0e0e0', padding: '16px', minHeight: '100vh', fontFamily: 'Segoe UI, Arial, sans-serif' }}>
+    <div style={{ maxWidth: '1000px', margin: '0 auto', background: '#121212', color: '#e0e0e0', padding: '16px', minHeight: '100vh', fontFamily: 'Segoe UI, Arial, sans-serif' }}>
       <h2>Interactive Diffie-Hellman + Brute-Force Toy</h2>
 
       <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '16px', alignItems: 'center' }}>
