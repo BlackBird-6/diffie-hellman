@@ -70,7 +70,7 @@ export function pickPrimeBits(bits) {
     if (isPrime(p)) candidates.push(p);
     if (candidates.length >= 150) break;
   }
-  if (candidates.length === 0) throw new Error('No prime in range for bits=' + bits);
+  if (candidates.length === 0) throw new Error('No prime (somehow) in range for bits=' + bits);
   return candidates[Math.floor(Math.random() * candidates.length)];
 }
 
@@ -81,4 +81,9 @@ export function makeSafePrime(qbits) {
     if (isPrime(p)) return { p, q };
   }
   throw new Error('Could not find safe prime for qbits=' + qbits);
+}
+
+export function makePrime(qbits) {
+  const q = pickPrimeBits(qbits);
+  return { p: 2 * q + 1, q };
 }

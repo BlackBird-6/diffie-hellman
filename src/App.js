@@ -1,6 +1,6 @@
 /* global BigInt */
 import React, { useState } from 'react';
-import { isPrime, powmod, makeSafePrime, findSubgroupGenerator } from './utils/cryptoUtils';
+import { isPrime, powmod, makeSafePrime, makePrime, findSubgroupGenerator } from './utils/cryptoUtils';
 import ScatterPlot from './components/ScatterPlot';
 
 function App() {
@@ -10,6 +10,7 @@ function App() {
   const [globalRunHistory, setGlobalRunHistory] = useState([]);
   const [currentRun, setCurrentRun] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
+  const [safePrimeOnly, setSafePrimeOnly] = useState(true);
 
   const qBitOptions = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 
@@ -50,7 +51,7 @@ function App() {
     let pObj;
     try {
       const targetSize = targetPBits > 0 ? targetPBits - 1 : targetQBits;
-      pObj = makeSafePrime(targetSize);
+      pObj = safePrimeOnly ? makeSafePrime(targetSize) : makePrime(targetSize);
     } catch (err) {
       setStatusText('Prime generation failed: ' + err.message);
       return null;
@@ -70,7 +71,7 @@ function App() {
 
     const A = Number(powmod(g, a, p));
     const pBitsLen = p.toString(2).length - 1;
-    const baseStatus = `p=${p} (safe prime), q=${q}\ng=${g} (order q)\na=${a}, A=${A}\n`;
+    const baseStatus = `p=${p}${safePrimeOnly ? ' (safe prime)' : ''}, q=${q}\ng=${g} (order q)\na=${a}, A=${A}\n`;
     setStatusText(baseStatus + `\nBrute-forcing discrete log of A...`);
 
     const updateCallback = ({ found, elapsed, currentX }) => {
@@ -110,10 +111,8 @@ function App() {
     // Removed setGlobalRunHistory([]) so users can append multiple batches
     for (const bits of qBitOptions) {
       if (bits > qbits) break;
-      setStatusText(`Starting batch run for ${bits} bits...`);
       await runTrial(bits, 0);
     }
-    setStatusText(`Batch run complete for all q sizes.`);
     setIsRunning(false);
   };
 
@@ -136,6 +135,16 @@ function App() {
               <option key={b} value={b}>{b === 0 ? 'Default' : b + ' bits'}</option>
             ))}
           </select>
+        </label>
+
+        <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <input
+            type="checkbox"
+            checked={safePrimeOnly}
+            onChange={(e) => setSafePrimeOnly(e.target.checked)}
+            disabled={isRunning}
+          />
+          Ensure safe prime?
         </label>
 
         <button
