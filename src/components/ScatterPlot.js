@@ -70,6 +70,7 @@ const ScatterPlot = ({ history, currentRun }) => {
       const y = transY(p.time);
       ctx.beginPath();
       ctx.arc(x, y, 4, 0, 2 * Math.PI);
+      ctx.fillStyle = p.isSafe === false ? '#165993ff' : '#4dabf7';
       ctx.fill();
       ctx.strokeStyle = '#000';
       ctx.lineWidth = 1;

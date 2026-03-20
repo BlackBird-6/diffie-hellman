@@ -84,6 +84,7 @@ export function makeSafePrime(qbits) {
 }
 
 export function makePrime(qbits) {
-  const q = pickPrimeBits(qbits);
-  return { p: 2 * q + 1, q };
+  const p = pickPrimeBits(qbits + 1);
+  const q = Math.floor((p - 1) / 2);
+  return { p, q };
 }

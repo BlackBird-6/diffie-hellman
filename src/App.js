@@ -68,17 +68,29 @@ function App() {
     while (!isPrime(a) || a < Math.max(3, Math.floor(q / 4))) {
       a = Math.floor(Math.random() * (Number(q) - 3)) + 2;
     }
+    let b = 0;
+    while (!isPrime(b) || b < Math.max(3, Math.floor(q / 4))) {
+      b = Math.floor(Math.random() * (Number(q) - 3)) + 2;
+    }
 
     const A = Number(powmod(g, a, p));
+    const B = Number(powmod(g, b, p));
+    const sAlice = Number(powmod(B, a, p));
+    const sBob = Number(powmod(A, b, p));
+
     const pBitsLen = p.toString(2).length - 1;
-    const baseStatus = `p=${p}${safePrimeOnly ? ' (safe prime)' : ''}, q=${q}\ng=${g} (order q)\na=${a}, A=${A}\n`;
-    setStatusText(baseStatus + `\nBrute-forcing discrete log of A...`);
+    const baseStatus = `p=${p}${safePrimeOnly ? ' (safe prime)' : ''}, q=${q}, g=${g} (order q)\n` +
+      `Bob: a=${a} (private), A=${A} (public)\n` +
+      `Alice: b=${b} (private), B=${B} (public)\n` +
+      `Shared Secret: s=${sAlice}\n`;
+
+    setStatusText(baseStatus + `\nAttacker captured A and is brute-forcing a...`);
 
     const updateCallback = ({ found, elapsed, currentX }) => {
       setStatusText(
         baseStatus +
-        `progress: guess up to ${currentX} / ${q} in ${elapsed.toFixed(1)}ms\n` +
-        (found ? `FOUND discrete log: ${found}` : 'not found yet')
+        `progress: guessing a up to ${currentX} / ${q} in ${elapsed.toFixed(1)}ms\n` +
+        (found ? `CRACKED private key a: ${found}` : 'not found yet')
       );
       setCurrentRun({ bits: pBitsLen, time: elapsed });
     };
@@ -90,12 +102,12 @@ function App() {
     const finalElapsed = performance.now() - startTrial;
 
     if (foundA === null) {
-      setStatusText(prev => prev + `\n\nFailed to find log.`);
+      setStatusText(prev => prev + `\n\nFailed to crack key.`);
       setIsRunning(false);
       return null;
     }
 
-    setGlobalRunHistory(prev => [...prev, { bits: pBitsLen, time: finalElapsed }]);
+    setGlobalRunHistory(prev => [...prev, { bits: pBitsLen, time: finalElapsed, isSafe: safePrimeOnly }]);
     setCurrentRun(null);
     return foundA;
   };
