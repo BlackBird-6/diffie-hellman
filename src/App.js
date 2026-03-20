@@ -1,4 +1,3 @@
-/* global BigInt */
 import React, { useState } from 'react';
 import { isPrime, powmod, makeSafePrime, makePrime, findSubgroupGenerator } from './utils/cryptoUtils';
 import ScatterPlot from './components/ScatterPlot';

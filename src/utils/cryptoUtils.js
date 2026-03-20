@@ -1,4 +1,3 @@
-/* global BigInt */
 
 export function isPrime(n) {
   if (n < 2) return false;

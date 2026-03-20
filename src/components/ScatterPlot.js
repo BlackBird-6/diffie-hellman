@@ -1,4 +1,3 @@
-/* global BigInt */
 import React, { useRef, useEffect, useState } from 'react';
 
 const ScatterPlot = ({ history, currentRun }) => {
